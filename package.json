@@ -8,14 +8,14 @@
     },
     "repository": {
       "type": "git",
-      "url": "git+https://github.com/carinalullman/Node-Developer-Profile-Generator.git"
+      "url": "https://github.com/dkb715/Portfolio_take3"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-      "url": "https://github.com/carinalullman/Node-Developer-Profile-Generator/issues"
+      "url": "https://github.com/dkb715/Portfolio_take3/issues"
     },
-    "homepage": "https://github.com/carinalullman/Node-Developer-Profile-Generator#readme",
+    "homepage": "https://github.com/dkb715/Portfolio_take3#readme",
     "dependencies": {
       "axios": "^0.19.0",
       "html-pdf": "^2.2.0",

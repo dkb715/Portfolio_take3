@@ -55,7 +55,7 @@ promptUser()
     axios
       .get(queryUrl).then(function (res) {
         console.log(res);
-        info = {
+        data = {
           profilePic: res.data.avatar_url,
           name: res.data.name,
           location: res.data.location,
@@ -68,7 +68,7 @@ promptUser()
           following: res.data.following,
           color: faveColor,
         }
-        console.log(info);
+        console.log(data);
 
         const newQueryUrl = `https://api.github.com/users/${username}/repos`;
         console.log(newQueryUrl);
@@ -84,8 +84,8 @@ promptUser()
 
           }
           console.log("Final star count for all repositories: " + starCount)
-          info.starCount = starCount;
-          const html = generateHTML(info);
+          data.starCount = starCount;
+          const html = generateHTML(data);
 
           console.log(`${username}.html is ready to convert to PDF`);
           readyToConvert = true;
@@ -138,7 +138,7 @@ function generatePdf(html) {
 
 // This will generate the html into a downloadable pdf
 
-  function generateHTML(info) {
+  function generateHTML(data) {
     return ` <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -207,7 +207,7 @@ function generatePdf(html) {
        display: flex;
        justify-content: center;
        flex-wrap: wrap;
-       background-color: ${colors[info.color].headerBackground};
+       background-color: ${colors[data.color].headerBackground};
        color: black;
        padding: 10px;
        width: 95%;
@@ -262,7 +262,7 @@ function generatePdf(html) {
        .card {
          padding: 20px;
          border-radius: 6px;
-         background-color: ${colors[info.color].headerBackground};
+         background-color: ${colors[data.color].headerBackground};
          color: black;
          margin: 20px;
        }
@@ -291,20 +291,20 @@ function generatePdf(html) {
        <div class="wrapper">
         <div class="avi">
       <!--User Profile Picture and heading-->
-        <img src="${info.profilePic}" alt="Profile Picture" />
+        <img src="${data.profilePic}" alt="Profile Picture" />
         <br>
         <h1>Hey!</h1>
         <br>
         <h2>
-        My name is ${info.name}!</h1>
+        My name is ${data.name}!</h1>
         <br>
-        <h5>${info.bio}</h5>
+        <h5>${data.bio}</h5>
         <br>
        <nav class="links-nav">
          <!--href links to location, repo site, and porfolio-->
-        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${info.location}"><i class="fas fa-location-arrow"></i>${info.location}</a>
-        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${info.profileUrl}"><i class="fab fa-github-alt"></i> GitHub</a>
-        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${info.blog}"><i class="fas fa-rss"></i> Blog</a>
+        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${data.location}"><i class="fas fa-location-arrow"></i>${data.location}</a>
+        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${data.profileUrl}"><i class="fab fa-github-alt"></i> GitHub</a>
+        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${data.blog}"><i class="fas fa-rss"></i> Blog</a>
         </nav>
         
         </div>
@@ -317,13 +317,13 @@ function generatePdf(html) {
         <div class="col">
         <div class="card">
          <h3>Public Repositories</h3>
-        <h4>${info.repos}</h4>
+        <h4>${data.repos}</h4>
         </div>
         </div>
         <div class="col">
         <div class="card">
          <h3>Followers</h3>
-        <h4>${info.followers}</h4>
+        <h4>${data.followers}</h4>
         </div>
         </div>
          </div>
@@ -331,13 +331,13 @@ function generatePdf(html) {
         <div class="col">
         <div class="card">
          <h3>GitHub Stars</h3>
-        <h4>${info.starCount}</h4>
+        <h4>${data.starCount}</h4>
          </div>
           </div>
         <div class="col">
          <div class="card">
           <h3>Following</h3>
-           <h4>${info.following}</h4>
+           <h4>${data.following}</h4>
           </div>
         </div>
       </div>

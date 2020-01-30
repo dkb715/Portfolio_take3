@@ -5,20 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/>
-  <link href="https://fonts.googleapis.com/css?family=BioRhyme|Cabin&display=swap" rel="stylesheet">
   <title>Profile Generator</title>
   <style>
-    @page {
-      margin: 0;
-    }
-   *,
-   *::after,
-   *::before {
+   
+   :before {
    box-sizing: border-box;
-   }
-   html, body {
-   padding: 0;
-   margin: 0;
    }
    html, body, .wrapper {
    height: 100%;
@@ -28,47 +19,23 @@
    padding-top: 100px;
    }
    body {
+   font-family: 'Vicente Lamónaca', 'Sans', serif;
    background-color: rgb(196, 108, 255);
-   -webkit-print-color-adjust: exact !important;
-   font-family: 'Cabin', sans-serif;
    }
    main {
-   background-color: rgb(208, 246, 255);
    height: auto;
-   padding-top: 30px;
-   }
-   h1, h2, h3, h4, h5, h6 {
-   font-family: 'Vicente Lamónaca','Sans', serif;
-   margin: 0;
-   }
-   h1 {
-   font-size: 3em;
-   }
-   h2 {
-   font-size: 2.5em;
-   }
-   h3 {
-   font-size: 2em;
-   }
-   h4 {
-   font-size: 1.5em;
-   }
-   h5 {
-   font-size: 1.3em;
-   }
-   h6 {
-   font-size: 1.2em;
+   background-color: rgb(208, 246, 255);
    }
    .avi {
    position: center;
    margin: 0 auto;
+   color: black;
+   padding: 10px;
+   background-color: rgb(196, 108, 255);
    margin-bottom: -50px;
    display: flex;
    justify-content: center;
    flex-wrap: wrap;
-   background-color: rgb(196, 108, 255);
-   color: black;
-   padding: 10px;
    width: 95%;
    border-radius: 6px;
    }
@@ -81,6 +48,27 @@
    border: 6px solid black;
    box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
    }
+   .container {
+   padding: 55px;
+   padding-left: 125px;
+   padding-right: 125px;
+   }
+   h1, h2, h3, h4, h5, h6 {
+   font-family: 'Vicente Lamónaca','Sans', serif;
+   margin: 0;
+   }
+   h1 {
+   font-size: 3em;
+   }
+   h2 {
+   font-size: 2.4em;
+   }
+   h3, h4{
+   font-size: 2em;
+   }
+   h5, h6 {
+   font-size: 1.5em;
+   }
    .avi h1, .avi h2 {
    width: 100%;
    text-align: center;
@@ -88,60 +76,39 @@
    .avi h1 {
    margin-top: 10px;
    }
+   .nav-link {
+   display: inline-block;
+   margin: 5px;
+   }
    .links-nav {
    width: 100%;
    text-align: center;
-   padding: 20px 0;
-   font-size: 1.1em;
+   font-size: 1.5em;
+   padding: 0;
    }
-   .nav-link {
-   display: inline-block;
-   margin: 5px 10px;
-   }
-   .workExp-date {
-   font-style: italic;
-   font-size: .7em;
-   text-align: right;
-   margin-top: 10px;
-   }
-   .container {
-   padding: 50px;
-   padding-left: 100px;
-   padding-right: 100px;
-   }
-
    .row {
      display: flex;
-     flex-wrap: wrap;
-     justify-content: space-between;
      margin-top: 20px;
      margin-bottom: 20px;
    }
-
-   .card {
-     padding: 20px;
-     border-radius: 6px;
-     background-color: rgb(196, 108, 255);
-     color: black;
-     margin: 20px;
-   }
-   
    .col {
    flex: 1;
    text-align: center;
    }
-
+   .card {
+     color: black;
+     padding: 20px;
+     background-color: rgb(196, 108, 255);
+     margin: 20px;
+     /* gives cards curvy edges */
+     border-radius: 6px;
+   }
    a, a:hover {
    text-decoration: none;
-   color: inherit;
-   font-weight: bold;
+   color: black;
+   font-weight: bolder;
    }
 
-   @media print { 
-    body { 
-      zoom: .75; 
-    } 
-   }
 </style>
 </head>
 
@@ -171,11 +138,6 @@
 <!--All content cards will be in this main container-->
     <main>
     <div class="container">
-    <div class="row">
-    <div class="col">
-    <h3></h3>
-    </div>
-     </div>
     <div class="row">
     <div class="col">
     <div class="card">

@@ -1,3 +1,4 @@
+//Defined variables
 const inquirer = require("inquirer");
 const fs = require("fs");
 const conversion = require("phantom-html-to-pdf")();
@@ -19,6 +20,7 @@ function promptUser() {
     choices: ['red', 'pink', 'green', 'blue']
   }]);
 }
+//setting the colors as an object to be able to then grab from on a user's faveColor response
 const colors = {
 
   pink: {
@@ -47,14 +49,21 @@ const colors = {
   }
 };
   
-let readyToConvert = false;
+//this function passes through the promptUser function to grab the variables "username" and ...
+// "favecolor" defined in the return.inquirer prompt
+
+//Promise function 
 promptUser()
   .then(function ({ username, faveColor }) {
-
+//gives code the api link to pass through before grabbing the user response
     const queryUrl = `https://api.github.com/users/${username}`;
     axios
+    //this call will ge the user's response by passing through the defined variable/const which is the github link
+    //the function will then replace username with the users response and run the api with the users repsonded username
       .get(queryUrl).then(function (res) {
+        //this will console log the users responses
         console.log(res);
+        //data is the defined object for pulling information from the users profile site and faveColor reponse
         data = {
           profilePic: res.data.avatar_url,
           name: res.data.name,
@@ -136,7 +145,7 @@ function generatePdf(html) {
 }
 
 
-// This will generate the html into a downloadable pdf
+// This will generate the html template filled with the repsonded github user name and favorite color into a downloadable pdf
 
   function generateHTML(data) {
     return ` <!DOCTYPE html>
@@ -146,7 +155,6 @@ function generatePdf(html) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/>
-      <link href="https://fonts.googleapis.com/css?family=BioRhyme|Cabin&display=swap" rel="stylesheet">
       <title>Profile Generator</title>
       <style>
         @page {
@@ -227,13 +235,13 @@ function generatePdf(html) {
        text-align: center;
        }
        .avi h1 {
-       margin-top: 10px;
+       margin-top: 15px;
        }
        .links-nav {
        width: 100%;
        text-align: center;
        padding: 20px 0;
-       font-size: 1.1em;
+       font-size: 1.3em;
        }
        .nav-link {
        display: inline-block;

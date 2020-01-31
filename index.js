@@ -1,28 +1,37 @@
 //Defined variables
 const inquirer = require("inquirer");
 const fs = require("fs");
-const conversion = require("phantom-html-to-pdf")();
 const axios = require("axios");
 const pdf = require('html-pdf');
-const util = require("util");
 
 inquirer
+//User prompt in the terminal
 function promptUser() {
   return inquirer.prompt([{
+    //specifies type of question
     type: "input",
     message: "Enter your GitHub username:",
+    default: "dkb715",
+    //object to call from on input to generate user specified github portfolio
     name: "username"
   }, 
   {
     type: "list",
     message: "What's your favorite color?",
-    name: "faveColor",
-    choices: ['red', 'pink', 'green', 'blue']
+    //object to call from when generating colors
+    name: "favColor",
+    choices: ['blue', 'pink', 'red', 'green']
   }]);
 }
-//setting the colors as an object to be able to then grab from on a user's faveColor response
+//setting the colors object as a string within an array to be able to then grab from on a user's favColor response
 const colors = {
-
+  
+  blue: {
+    wrapperBackground: "blue",
+    headerBackground: "#26175A",
+    headerColor: "white",
+    photoBorderColor: "#73448C"
+  },
   pink: {
     wrapperBackground: "pink",
     headerBackground: "#FF8374",
@@ -40,22 +49,16 @@ const colors = {
     headerBackground: "#C1C72C",
     headerColor: "black",
     photoBorderColor: "#black"
-  },
-  blue: {
-    wrapperBackground: "blue",
-    headerBackground: "#26175A",
-    headerColor: "white",
-    photoBorderColor: "#73448C"
   }
 };
   
 //this function passes through the promptUser function to grab the variables "username" and ...
-// "favecolor" defined in the return.inquirer prompt
+// "favcolor" defined in the return.inquirer prompt
 
 //Promise function 
 promptUser()
-  .then(function ({ username, faveColor }) {
-//gives code the api link to pass through before grabbing the user response
+  .then(function ({ username, favColor }) {
+//gives code the api link to pass through after grabbing the user response on the prompt
     const queryUrl = `https://api.github.com/users/${username}`;
     axios
     //this call will ge the user's response by passing through the defined variable/const which is the github link
@@ -63,7 +66,7 @@ promptUser()
       .get(queryUrl).then(function (res) {
         //this will console log the users responses
         console.log(res);
-        //data is the defined object for pulling information from the users profile site and faveColor reponse
+        //data is the defined object for pulling information from the users profile site and favColor reponse
         data = {
           profilePic: res.data.avatar_url,
           name: res.data.name,
@@ -75,50 +78,14 @@ promptUser()
           repos: res.data.public_repos,
           followers: res.data.followers,
           following: res.data.following,
-          color: faveColor,
+          color: favColor,
         }
         console.log(data);
+//making a const to run through users repo API, this is how I start to count the stars on the users page
+        const newUrl = `https://api.github.com/users/${username}/repos`;
+        console.log(newUrl);
 
-        const newQueryUrl = `https://api.github.com/users/${username}/repos`;
-        console.log(newQueryUrl);
-
-// Make a request for a user with a given ID
-
-        axios.get(newQueryUrl).then(function (res) {
-          let starCount = 0;
-          for (let index = 0; index < res.data.length; index++) {
-            let count = res.data[index].stargazers_count;
-            starCount = starCount + count;
-            console.log(res)
-
-          }
-          console.log("Final star count for all repositories: " + starCount)
-          data.starCount = starCount;
-          const html = generateHTML(data);
-
-          console.log(`${username}.html is ready to convert to PDF`);
-          readyToConvert = true;
-
-          // for testing the HTML file that gets written to disk
-          fs.writeFileSync(`${username}.html`, html);
-
-          // https://www.npmjs.com/package/html-pdf
-          var options = { format: 'landscape' };
-          pdf.create(html, options).toFile(`${username}.pdf`, function (err, res) {
-            if (err) return console.log(err);
-            console.log(res);
-          });
-
-        });
-      });
-    
-      })
-
-  .catch(function (err) {
-    console.log(err);
-
-  })
-
+//actual pdf generator using the html const
 function generatePdf(html) {
   let conversion = convertFactory({
 
@@ -128,27 +95,66 @@ function generatePdf(html) {
 
   conversion({
     html: html,
+    //waiting for confirmation before converting
     waitForJs: true,
     waitForJsVarName: readyToConvert,
   },
+  //response on err or on results, on err console will log the err 
     function (err, result) {
       if (err) {
         return console.log(err);
       }
 
-      result.stream.pipe(fs.createWriteStream(`${username}.pdf`));
-
+      result.return.download(fs.createWriteStream(`${username}.pdf`));
+//will stop running if theres an error
       conversion.kill();
 
-      console.log(`${username}.pdf is now available in your current directory`);
+      console.log(`${username}.pdf is ready to download!`);
     });
 }
+// Make a request for a user with a given ID
+//the axios function will fix the star count problem
+axios.get(newUrl).then(function (res) {
+  let starCount = 0;
+  for (let index = 0; index < res.data.length; index++) {
+    let count = res.data[index].stargazers_count;
+    starCount = starCount + count;
+    console.log(res)
+
+  }
+  //will add user data to starcount, which I set to 0, and that will give me the star count to post on the pdf
+  console.log("Final star count for all repositories: " + starCount)
+  data.starCount = starCount;
+  const html = generateHTML(data);
+  //message to user
+  console.log(`${username}.html is ready to convert to PDF`);
+  readyToConvert = true;
+
+  // for testing the HTML file that gets written to disk, fs module is required to run
+  fs.writeFileSync(`${username}.html`, html);
+
+  // https://www.npmjs.com/package/html-pdf
+  var options = { format: 'portrait' };
+  pdf.create(html, options).toFile(`${username}.pdf`, function (err, res) {
+    if (err) return console.log(err);
+    console.log(res);
+  });
+
+});
+});
+
+})
+//will respond an error if function doesnt run properly
+.catch(function (err) {
+console.log(err);
+
+})
 
 
 // This will generate the html template filled with the repsonded github user name and favorite color into a downloadable pdf
 
   function generateHTML(data) {
-    return ` <!DOCTYPE html>
+    return `       <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
@@ -157,17 +163,9 @@ function generatePdf(html) {
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/>
       <title>Profile Generator</title>
       <style>
-        @page {
-          margin: 0;
-        }
-       *,
-       *::after,
-       *::before {
+       
+       .before {
        box-sizing: border-box;
-       }
-       html, body {
-       padding: 0;
-       margin: 0;
        }
        html, body, .wrapper {
        height: 100%;
@@ -177,47 +175,23 @@ function generatePdf(html) {
        padding-top: 100px;
        }
        body {
-       background-color: ;
-       -webkit-print-color-adjust: exact !important;
-       font-family: 'Cabin', sans-serif;
+       font-family: 'Vicente Lamónaca', 'Sans', serif;
+       background-color: ${colors[data.color].headerBackground};
        }
        main {
-       background-color: rgb(208, 246, 255);
        height: auto;
-       padding-top: 30px;
-       }
-       h1, h2, h3, h4, h5, h6 {
-       font-family: 'Vicente Lamónaca','Sans', serif;
-       margin: 0;
-       }
-       h1 {
-       font-size: 3em;
-       }
-       h2 {
-       font-size: 2.5em;
-       }
-       h3 {
-       font-size: 2em;
-       }
-       h4 {
-       font-size: 1.5em;
-       }
-       h5 {
-       font-size: 1.3em;
-       }
-       h6 {
-       font-size: 1.2em;
-       }
+       background-color: rgb(208, 246, 255);
+      }
        .avi {
        position: center;
        margin: 0 auto;
+       color: black;
+       padding: 10px;
+       background-color: ${colors[data.color].headerBackground};
        margin-bottom: -50px;
        display: flex;
        justify-content: center;
        flex-wrap: wrap;
-       background-color: ${colors[data.color].headerBackground};
-       color: black;
-       padding: 10px;
        width: 95%;
        border-radius: 6px;
        }
@@ -230,67 +204,67 @@ function generatePdf(html) {
        border: 6px solid black;
        box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
        }
+       .container {
+       padding: 55px;
+       padding-left: 125px;
+       padding-right: 125px;
+       }
+       h1, h2, h3, h4, h5, h6 {
+       font-family: 'Vicente Lamónaca','Sans', serif;
+       margin: 0;
+       }
+       h1 {
+       font-size: 2.5em;
+       }
+       h2, h3 {
+       font-size: 1.75em;
+       }
+       h4{
+       font-size: 1.5em;
+       }
+       h5, h6 {
+       font-size: 1em;
+       }
        .avi h1, .avi h2 {
        width: 100%;
        text-align: center;
        }
        .avi h1 {
-       margin-top: 15px;
+       margin-top: 10px;
+       }
+       .nav-link {
+       display: inline-block;
+       margin: 5px;
        }
        .links-nav {
        width: 100%;
        text-align: center;
-       padding: 20px 0;
-       font-size: 1.3em;
+       font-size: .75em;
+       padding: 0;
        }
-       .nav-link {
-       display: inline-block;
-       margin: 5px 10px;
-       }
-       .workExp-date {
-       font-style: italic;
-       font-size: .7em;
-       text-align: right;
-       margin-top: 10px;
-       }
-       .container {
-       padding: 50px;
-       padding-left: 100px;
-       padding-right: 100px;
-       }
-    
        .row {
          display: flex;
-         flex-wrap: wrap;
-         justify-content: space-between;
          margin-top: 20px;
          margin-bottom: 20px;
        }
-    
-       .card {
-         padding: 20px;
-         border-radius: 6px;
-         background-color: ${colors[data.color].headerBackground};
-         color: black;
-         margin: 20px;
-       }
-       
        .col {
        flex: 1;
        text-align: center;
        }
-    
+       .card {
+         color: black;
+         padding: 20px;
+         background-color: ${colors[data.color].headerBackground};
+         margin: 20px;
+         /* gives cards curvy edges */
+         border-radius: 6px;
+       }
        a, a:hover {
        text-decoration: none;
-       color: inherit;
-       font-weight: bold;
+       color: black;
+       font-weight: bolder;
        }
     
-       @media print { 
-        body { 
-          zoom: .75; 
-        } 
-       }
     </style>
     </head>
     
@@ -310,7 +284,7 @@ function generatePdf(html) {
         <br>
        <nav class="links-nav">
          <!--href links to location, repo site, and porfolio-->
-        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${data.location}"><i class="fas fa-location-arrow"></i>${data.location}</a>
+        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${data.location}"><i class="fas fa-location-arrow"></i> Fishtown Philadelphia, PA</a>
         <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${data.profileUrl}"><i class="fab fa-github-alt"></i> GitHub</a>
         <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${data.blog}"><i class="fas fa-rss"></i> Blog</a>
         </nav>
@@ -320,7 +294,6 @@ function generatePdf(html) {
     <!--All content cards will be in this main container-->
         <main>
         <div class="container">
-
         <div class="row">
         <div class="col">
         <div class="card">
@@ -358,4 +331,3 @@ function generatePdf(html) {
       }
       
   
-

@@ -78,7 +78,7 @@ promptUser()
         console.log(newUrl);
 
 //actual pdf generator using the html const
-function generatePdf(html) {
+function pdfGenerator(html) {
   let conversion = convertFactory({
 
     converterPath: convertFactory.converters.PDF
@@ -96,13 +96,13 @@ function generatePdf(html) {
       if (err) {
         return console.log(err);
       }
-
-      result.return.download(fs.createWriteStream(`${username}.pdf`));
-//will stop running if theres an error
-      conversion.kill();
-
-      console.log(`${username}.pdf is ready to download!`);
-    });
+  
+  result.return.download(fs.createWriteStream(`${username}.pdf`));
+  //will stop running if theres an error
+  conversion.kill();
+  
+  console.log(`${username}.pdf is ready to download!`);
+});
 }
 // Make a request for a user with a given ID
 //the axios function will fix the star count problem
@@ -120,7 +120,7 @@ axios.get(newUrl).then(function (res) {
   const html = generateHTML(data);
   //message to user
   console.log(`${username}.html is ready to convert to PDF`);
-  
+
   readyToConvert = true;
 
   // for testing the HTML file that gets written to disk, fs module is required to run
@@ -160,12 +160,10 @@ console.log(err);
       .before {
       box-sizing: border-box;
       }
-      html, body, .wrapper {
-      height: 100%;
-      }
+
       .wrapper {
       background-color: rgb(179, 172, 172);
-      padding-top: 100px;
+      padding-top: 75px;
       }
       body {
       font-family: 'Vicente Lamónaca', 'Sans', serif;
@@ -185,22 +183,21 @@ console.log(err);
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      width: 95%;
-      border-radius: 6px;
+      width: 97%;
+      border-radius: 5px;
       }
       .avi img {
       width: 250px;
       height: 250px;
       border-radius: 50%;
       object-fit: cover;
-      margin-top: -75px;
-      border: 6px solid black;
-      box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
+      margin-top: -50px;
+      border: 5px black;
       }
       .container {
       padding: 55px;
-      padding-left: 125px;
-      padding-right: 125px;
+      padding-left: 50px;
+      padding-right: 50px;
       }
       h1, h2, h3, h4, h5, h6 {
       font-family: 'Vicente Lamónaca','Sans', serif;
@@ -209,11 +206,11 @@ console.log(err);
       .avi h1 {
       margin-top: 10px;
       }
-      .nav-link {
+      .links {
       display: inline-block;
       margin: 5px;
       }
-      .links-nav {
+      .navLinks {
       width: 100%;
       text-align: center;
       font-size: 1.5em;
@@ -226,15 +223,14 @@ console.log(err);
         flex-wrap: wrap;
       }
       .col {
-      flex: 1;
-      text-align: center;
+        text-align: center;
       }
-      .card {
+      .cards {
         color: black;
         padding: 20px;
         background-color:  ${colors[data.color].backgroundColor};
         margin: 20px;
-        /* gives cards curvy edges */
+        /* gives cardss curvy edges */
         border-radius: 5px;
       }
       h1 {
@@ -257,7 +253,7 @@ console.log(err);
    </style>
    
     </head>
-    ${colors[data.color].backgroundColor}
+  
     <body>
       <!--website wrapper-->
        <div class="wrapper">
@@ -272,11 +268,11 @@ console.log(err);
         <br>
         <h5>${data.bio}</h5>
         <br>
-       <nav class="links-nav">
+       <nav class="navLinks">
          <!--href links to location, repo site, and porfolio-->
-        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${data.location}"><i class="fas fa-location-arrow"></i> Fishtown Philadelphia, PA</a>
-        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${data.profileUrl}"><i class="fab fa-github-alt"></i> GitHub</a>
-        <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${data.blog}"><i class="fas fa-rss"></i> Blog</a>
+        <a class="links" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${data.location}"><i class="fas fa-location-arrow"></i> Fishtown Philadelphia, PA</a>
+        <a class="links" target="_blank" rel="noopener noreferrer" href="${data.profileUrl}"><i class="fab fa-github-alt"></i> GitHub</a>
+        <a class="links" target="_blank" rel="noopener noreferrer" href="${data.blog}"><i class="fas fa-rss"></i> Blog</a>
         </nav>
         
         </div>
@@ -286,13 +282,13 @@ console.log(err);
         <div class="container">
         <div class="row">
         <div class="col">
-        <div class="card">
+        <div class="cards">
          <h3>Public Repositories</h3>
         <h4>${data.repos}</h4>
         </div>
         </div>
         <div class="col">
-        <div class="card">
+        <div class="cards">
          <h3>Followers</h3>
         <h4>${data.followers}</h4>
         </div>
@@ -300,13 +296,13 @@ console.log(err);
          </div>
         <div class="row">
         <div class="col">
-        <div class="card">
+        <div class="cards">
          <h3>GitHub Stars</h3>
         <h4>${data.starCount}</h4>
          </div>
           </div>
         <div class="col">
-         <div class="card">
+         <div class="cards">
           <h3>Following</h3>
            <h4>${data.following}</h4>
           </div>

@@ -1,8 +1,8 @@
 //Defined variables
 const inquirer = require("inquirer");
 const fs = require("fs");
-const axios = require("axios");
 const pdf = require('html-pdf');
+const axios = require("axios");
 
 inquirer
 //User prompt in the terminal
@@ -66,7 +66,7 @@ promptUser()
       .get(queryUrl).then(function (res) {
         //this will console log the users responses
         console.log(res);
-        //data is the defined object for pulling information from the users profile site and favColor reponse
+        //data is the defined object for pulling information from the users profile site and favColor reponse, doesnt get the stars in this function
         data = {
           profilePic: res.data.avatar_url,
           name: res.data.name,
@@ -81,7 +81,7 @@ promptUser()
           color: favColor,
         }
         console.log(data);
-//making a const to run through users repo API, this is how I start to count the stars on the users page
+//second api call making a const to run through users repo API, this is how I start to count the stars on the users page
         const newUrl = `https://api.github.com/users/${username}/repos`;
         console.log(newUrl);
 
@@ -99,7 +99,7 @@ function generatePdf(html) {
     waitForJs: true,
     waitForJsVarName: readyToConvert,
   },
-  //response on err or on results, on err console will log the err 
+  //Using this function to run through the two parameters err and result. response on err or on results, on err console will log the err 
     function (err, result) {
       if (err) {
         return console.log(err);

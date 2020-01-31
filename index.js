@@ -27,43 +27,35 @@ function promptUser() {
 const colors = {
   
   blue: {
-    wrapperBackground: "blue",
-    headerBackground: "#26175A",
-    headerColor: "white",
-    photoBorderColor: "#73448C"
+    colorName: "blue",
+    backgroundColor: "#26175A",
   },
   pink: {
-    wrapperBackground: "pink",
-    headerBackground: "#FF8374",
-    headerColor: "white",
-    photoBorderColor: "#FEE24C"
+    colorName: "pink",
+    backgroundColor: "#FF8374",
   },
   red: {
-    wrapperBackground: "red",
-    headerBackground: "#870603",
-    headerColor: "white",
-    photoBorderColor: "white"
+    colorName: "red",
+    backgroundColor: "#870603",
   },
   green: {
-    wrapperBackground: "green",
-    headerBackground: "#C1C72C",
-    headerColor: "black",
-    photoBorderColor: "#black"
+    colorName: "green",
+    backgroundColor: "#C1C72C",
   }
 };
   
 //this function passes through the promptUser function to grab the variables "username" and ...
 // "favcolor" defined in the return.inquirer prompt
 
-//Promise function 
+
 promptUser()
   .then(function ({ username, favColor }) {
 //gives code the api link to pass through after grabbing the user response on the prompt
-    const queryUrl = `https://api.github.com/users/${username}`;
+    const user = `https://api.github.com/users/${username}`;
     axios
     //this call will ge the user's response by passing through the defined variable/const which is the github link
     //the function will then replace username with the users response and run the api with the users repsonded username
-      .get(queryUrl).then(function (res) {
+      .get(user).then(function (res) {
         //this will console log the users responses
         console.log(res);
         //data is the defined object for pulling information from the users profile site and favColor reponse, doesnt get the stars in this function
@@ -128,6 +120,7 @@ axios.get(newUrl).then(function (res) {
   const html = generateHTML(data);
   //message to user
   console.log(`${username}.html is ready to convert to PDF`);
+  
   readyToConvert = true;
 
   // for testing the HTML file that gets written to disk, fs module is required to run
@@ -163,111 +156,108 @@ console.log(err);
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/>
       <title>Profile Generator</title>
       <style>
-       
-       .before {
-       box-sizing: border-box;
-       }
-       html, body, .wrapper {
-       height: 100%;
-       }
-       .wrapper {
-       background-color: rgb(179, 172, 172);
-       padding-top: 100px;
-       }
-       body {
-       font-family: 'Vicente Lamónaca', 'Sans', serif;
-       background-color: ${colors[data.color].headerBackground};
-       }
-       main {
-       height: auto;
-       background-color: rgb(208, 246, 255);
+  
+      .before {
+      box-sizing: border-box;
       }
-       .avi {
-       position: center;
-       margin: 0 auto;
-       color: black;
-       padding: 10px;
-       background-color: ${colors[data.color].headerBackground};
-       margin-bottom: -50px;
-       display: flex;
-       justify-content: center;
-       flex-wrap: wrap;
-       width: 95%;
-       border-radius: 6px;
-       }
-       .avi img {
-       width: 250px;
-       height: 250px;
-       border-radius: 50%;
-       object-fit: cover;
-       margin-top: -75px;
-       border: 6px solid black;
-       box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
-       }
-       .container {
-       padding: 55px;
-       padding-left: 125px;
-       padding-right: 125px;
-       }
-       h1, h2, h3, h4, h5, h6 {
-       font-family: 'Vicente Lamónaca','Sans', serif;
-       margin: 0;
-       }
-       h1 {
-       font-size: 2.5em;
-       }
-       h2, h3 {
-       font-size: 1.75em;
-       }
-       h4{
-       font-size: 1.5em;
-       }
-       h5, h6 {
-       font-size: 1em;
-       }
-       .avi h1, .avi h2 {
-       width: 100%;
-       text-align: center;
-       }
-       .avi h1 {
-       margin-top: 10px;
-       }
-       .nav-link {
-       display: inline-block;
-       margin: 5px;
-       }
-       .links-nav {
-       width: 100%;
-       text-align: center;
-       font-size: .75em;
-       padding: 0;
-       }
-       .row {
-         display: flex;
-         margin-top: 20px;
-         margin-bottom: 20px;
-       }
-       .col {
-       flex: 1;
-       text-align: center;
-       }
-       .card {
-         color: black;
-         padding: 20px;
-         background-color: ${colors[data.color].headerBackground};
-         margin: 20px;
-         /* gives cards curvy edges */
-         border-radius: 6px;
-       }
-       a, a:hover {
-       text-decoration: none;
-       color: black;
-       font-weight: bolder;
-       }
-    
-    </style>
+      html, body, .wrapper {
+      height: 100%;
+      }
+      .wrapper {
+      background-color: rgb(179, 172, 172);
+      padding-top: 100px;
+      }
+      body {
+      font-family: 'Vicente Lamónaca', 'Sans', serif;
+      background-color:  ${colors[data.color].backgroundColor};
+      }
+      main {
+      height: auto;
+      background-color: rgb(208, 246, 255);
+      }
+      .avi {
+      position: center;
+      margin: 0 auto;
+      color: black;
+      padding: 10px;
+      background-color:  ${colors[data.color].backgroundColor};
+      margin-bottom: -50px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 95%;
+      border-radius: 6px;
+      }
+      .avi img {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: -75px;
+      border: 6px solid black;
+      box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
+      }
+      .container {
+      padding: 55px;
+      padding-left: 125px;
+      padding-right: 125px;
+      }
+      h1, h2, h3, h4, h5, h6 {
+      font-family: 'Vicente Lamónaca','Sans', serif;
+      margin: 0;
+      }
+      .avi h1 {
+      margin-top: 10px;
+      }
+      .nav-link {
+      display: inline-block;
+      margin: 5px;
+      }
+      .links-nav {
+      width: 100%;
+      text-align: center;
+      font-size: 1.5em;
+      padding: 0;
+      }
+      .row {
+        display: flex;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .col {
+      flex: 1;
+      text-align: center;
+      }
+      .card {
+        color: black;
+        padding: 20px;
+        background-color:  ${colors[data.color].backgroundColor};
+        margin: 20px;
+        /* gives cards curvy edges */
+        border-radius: 5px;
+      }
+      h1 {
+      font-size: 3em;
+      }
+      h2 {
+      font-size: 2.4em;
+      }
+      h3, h4{
+      font-size: 2em;
+      }
+      h5, h6 {
+      font-size: 1.5em;
+      }
+      .avi h1, .avi h2 {
+      width: 100%;
+      text-align: center;
+      }
+   
+   </style>
+   
     </head>
-    
+    ${colors[data.color].backgroundColor}
     <body>
       <!--website wrapper-->
        <div class="wrapper">

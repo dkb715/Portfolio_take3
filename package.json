@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.19.2",
-    "html-pdf": "^2.2.0",
+    "html-pdf": "^3.0.1",
     "inquirer": "^7.0.4",
     "phantom-html-to-pdf": "^0.6.0"
   },
